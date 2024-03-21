@@ -16,6 +16,9 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: 'module',
   },
+  ignorePatterns: [
+    'vite.config.js',
+  ],
   rules: {
     'vue/html-self-closing': 0,
     // 强制每行的最大属性数

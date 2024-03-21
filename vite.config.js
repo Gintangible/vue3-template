@@ -6,9 +6,16 @@ import vue from '@vitejs/plugin-vue';
 export default defineConfig({
   plugins: [vue()],
   resolve: {
-    //设置别名
+    // 设置别名
     alias: {
       '@': path.resolve(__dirname, 'src')
     }
+  },
+  css: {
+    preprocessorOptions: {
+      less: {
+        additionalData: `@import "@/styles/variable.less";`
+      },
+    },
   },
 });
