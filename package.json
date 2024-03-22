@@ -24,15 +24,23 @@
     ]
   },
   "dependencies": {
-    "js-cookie": "^3.0.1",
+    "amfe-flexible": "^2.2.1",
+    "axios": "^1.6.8",
+    "dayjs": "^1.11.10",
+    "js-cookie": "^3.0.5",
+    "normalize.css": "^8.0.1",
+    "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
+    "vant": "^4.8.7",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.6",
     "@commitlint/config-conventional": "^17.6.6",
+    "@vant/auto-import-resolver": "^1.1.0",
     "@vitejs/plugin-vue": "^4.5.0",
+    "eruda": "^3.0.1",
     "eslint": "^8.54.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-vue": "^9.18.1",
@@ -40,6 +48,10 @@
     "less": "^3.12.2",
     "less-loader": "^7.0.2",
     "lint-staged": "10.5.3",
-    "vite": "^5.0.0"
+    "postcss-pxtorem": "^6.1.0",
+    "unplugin-auto-import": "^0.17.5",
+    "unplugin-vue-components": "^0.26.0",
+    "vite": "^5.0.0",
+    "vite-plugin-eslint": "^1.8.1"
   }
 }
