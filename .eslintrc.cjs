@@ -31,6 +31,7 @@ module.exports = {
         max: 1,
       },
     }],
+    'vue/multi-word-component-names': 'off',
     'import/extensions': 'off',
     'import/no-unresolved': 'off',
     // 强制类方法使用 this

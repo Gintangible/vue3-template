@@ -1,6 +1,7 @@
 <template>
-  <div>{{ userStore.name }}</div>
-  <RouterView />
+  <div>
+    {{ userStore.name }}
+  </div>
 </template>
 
 <script setup>
