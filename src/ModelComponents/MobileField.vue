@@ -1,13 +1,14 @@
 <template>
   <van-field
-    v-model.trim="text"
+    v-model.trim="mobile"
     :name="name"
+    type="tel"
     :readonly="readonly"
     :label="label"
     :placeholder="placeholder"
     :required="required"
     :error-message-align="inputAlign"
-    :rules="nameRule"
+    :rules="mobileRule"
     :input-align="inputAlign"
     @click="onClick"
     @update:model-value="onChange"
@@ -17,17 +18,17 @@
 
 <script setup>
 import { showToast } from 'vant';
-import Name from '@/models/validate/Name';
+import Mobile from '@/models/validate/Mobile';
 
 const props = defineProps({
-  name: {
-    type: String,
-    default: 'name',
-  },
   modelValue: {
     type: String,
     required: true,
     default: '',
+  },
+  name: {
+    type: String,
+    default: 'mobile',
   },
   readonly: Boolean,
   readonlyTip: {
@@ -41,11 +42,11 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: '姓　　名',
+    default: '手机号码',
   },
   placeholder: {
     type: String,
-    default: '请填写姓名',
+    default: '请填写手机号码',
   },
   inputAlign: {
     type: String,
@@ -59,20 +60,20 @@ const emit = defineEmits([
   'error-clear',
 ]);
 
-const text = useVModel(props, 'modelValue', emit);
+const mobile = useVModel(props, 'modelValue', emit);
 
-const nameRule = computed(() => [{
+const mobileRule = computed(() => [{
   required: props.required,
   trigger: 'onBlur',
   validator: (val, rule) => {
-    const result = Name.validResult(val);
+    const result = Mobile.validResult(val);
     rule.message = result.description;
     return result.success;
   },
 }].concat(props.rules));
 
-watch(() => props.modelValue, (newValue) => {
-  text.value = newValue;
+watch(() => props.value, (newValue) => {
+  mobile.value = newValue;
 }, {
   immediate: true,
   deep: true,
@@ -85,12 +86,12 @@ function onClick() {
 }
 
 function onChange(value) {
-  text.value = value?.toUpperCase()?.trim();
+  mobile.value = value?.toUpperCase()?.trim();
   emit('error-clear');
 }
 
 function onBlur() {
-  const result = Name.validResult(text.value);
+  const result = Mobile.validResult(mobile.value);
   if (!result.success) {
     emit('error', result.description);
   }

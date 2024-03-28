@@ -5,11 +5,11 @@ import OtherCredential from './validate/OtherCredential';
 
 class Credential {
   constructor(type = DEFAULT_CREDENTIAL_TYPE.value, number = '') {
-    this.type = type;
-    this.number = number;
+    this.type = type || '';
+    this.number = number || '';
     this.long_term = false;        // 证件是否长期有效，0表示否，1表示是
-    this.valid_from = null;          // 证件有效期起始日期，格式yyyy-MM-dd
-    this.valid_until = null;         // 证件有效期截止日期，格式yyyy-MM-dd
+    this.valid_from = '';          // 证件有效期起始日期，格式yyyy-MM-dd
+    this.valid_until = '';         // 证件有效期截止日期，格式yyyy-MM-dd
   }
 
   isIdentityCard() {
@@ -20,8 +20,8 @@ class Credential {
     this.type = obj.type || DEFAULT_CREDENTIAL_TYPE.value;
     this.number = obj.number || '';
     this.long_term = obj.long_term || false;
-    this.valid_from = obj.valid_from || null;
-    this.valid_until = obj.valid_until || null;
+    this.valid_from = obj.valid_from || '';
+    this.valid_until = obj.valid_until || '';
   }
 
   static create(obj) {

@@ -13,8 +13,11 @@
         @error="getError"
         @error-clear="getErrorClear"
       />
+      <CredentialField v-model="insured.credential" required />
+      <MobileField v-model="insured.mobile" required />
     </div>
     <!-- 提交按钮 -->
+    {{ insured }}
     <div @click="formSubmit">
       提交
     </div>
@@ -22,19 +25,26 @@
 </template>
 
 <script setup>
-import NameField from '@/ModelComponents/NameField.vue';
+import NameField from '@/modelComponents/NameField.vue';
+import CredentialField from '@/modelComponents/CredentialField.vue';
+import MobileField from '@/modelComponents/MobileField.vue';
 import Person from '@/models/Person';
 
 const insured = ref(new Person());
 
+console.log('gxw get start insured ', insured.value);
+
 const addForm = ref(null);
+
 function formSubmit() {
   addForm.value.submit();
 }
 function onSubmit(values) {
+  console.log('gxw get insured ', insured.value);
   console.log('gxw get values', values);
 }
 function onFailed(values) {
+  console.log('gxw get insured ', insured.value);
   console.log('gxw get onFailed values', values);
 }
 
