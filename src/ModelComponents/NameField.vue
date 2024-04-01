@@ -71,13 +71,6 @@ const nameRule = computed(() => [{
   },
 }].concat(props.rules));
 
-watch(() => props.modelValue, (newValue) => {
-  text.value = newValue;
-}, {
-  immediate: true,
-  deep: true,
-});
-
 function onClick() {
   if (props.readonly) {
     showToast(`${props.readonlyTip}不可更改`);

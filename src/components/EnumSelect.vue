@@ -2,12 +2,12 @@
   <div class="enum-select">
     <van-field
       ref="enum"
+      v-model="text"
       type="textarea"
       autosize
       :rows="1"
       :name="name"
       :required="required"
-      :value="text"
       :label="label"
       :placeholder="placeholder"
       readonly
@@ -17,13 +17,15 @@
       :rules="enumRule"
       @click="onClick"
     />
-    <van-popup v-model="showPicker" position="bottom">
+    <van-popup v-model:show="showPicker" :lock-scroll="false" position="bottom">
       <van-picker
         ref="picker"
+        v-model="pickerValue"
         :columns="columns"
         :title="label"
-        :default-index="defaultIndex"
-        :value-key="labelKey"
+        :readonly="readonly"
+        :loading="loading"
+        :columns-field-names="columnsFieldNames"
         show-toolbar
         @cancel="showPicker = false"
         @confirm="onConfirm"
@@ -45,7 +47,7 @@ import { showToast } from 'vant';
 
 const props = defineProps({
   modelValue: {
-    type: null,
+    type: [String, Array],
     required: true,
   },
   name: {
@@ -76,24 +78,28 @@ const props = defineProps({
     required: true,
     default: () => [],
   },
+  loading: Boolean,
+  columnsFieldNames: {
+    type: Object,
+    default: () => ({
+      text: 'text',
+      value: 'value',
+      children: 'children',
+    }),
+  },
+  textSeparate: {
+    type: String,
+    default: '/',
+  },
+  // 值分隔符，需要将最终结果的值拼接起来
+  valueSeparate: {
+    type: String,
+    default: '',
+  },
   readonly: Boolean,
   readonlyTip: {
     type: String,
     default: '',
-  },
-  labelKey: {
-    type: String,
-    default: 'name',
-  },
-  valueKey: {
-    type: String,
-    default: 'value',
-  },
-  // 多列时，结果合并
-  arrayDataMerge: Boolean,
-  valueSeparator: {
-    type: String,
-    default: '：',
   },
 });
 
@@ -103,87 +109,98 @@ const emit = defineEmits([
   'change',
 ]);
 
-const showPicker = ref(false);
-const text = ref('');
-const defaultIndex = ref(0);
-const picker = ref(null);
-
 const enumRule = computed(() => [{
   required: props.required,
 }].concat(props.rules));
 
-function $updatePicker(index) {
-  // 当 mounted() 函数调用 $updateUI() 方法时，因为vant的Popup组件尚不可见，所以
-  // vant的Picker组件尚未被渲染，this.$refs.picker 为undefined；
-  // 此时只能通过绑定属性设置 Picker 的 defaultIndex 值
-  defaultIndex.value = index;
-  if (picker.value) {
-    picker.value.setIndexes = [index];
+function findDataByValues(data, values) {
+  const matchedItems = [];
+  let level = 0;
+
+  function findInArray(arr, values) {
+    arr.forEach((item) => {
+      const targetValue = values[level];
+      if (item.value === targetValue) {
+        matchedItems.push(item);
+        if (Array.isArray(item.children)) {
+          level++;
+          findInArray(item.children, values);
+        }
+      }
+    });
   }
-}
-function $updateUI(newValue) {
-  if (newValue === null || newValue === '') {
-    text.value = '';
-    $updatePicker(0);
-    return;
-  }
-  if (props.arrayDataMerge) {
-    text.value = newValue;
-    return;
-  }
-  // 查找枚举值对应的索引
-  const index = props.columns.findIndex((e) => (props.valueKey ? e[props.valueKey] === newValue : e === newValue));
-  if (index < 0) {
-    text.value = '';
-    $updatePicker(0);
-  } else {
-    text.value = props.labelKey ? props.columns[index][props.labelKey] : props.columns[index];
-    $updatePicker(index);
-  }
+  findInArray(data, values);
+
+  return matchedItems;
 }
 
-watch(() => props.value, (newValue) => {
-  $updateUI(newValue);
+const text = ref('');
+const pickerValue = ref([]);
+function getTextDisplay(selectedOptions) {
+  text.value = selectedOptions.map((item) => item[props.columnsFieldNames.text]).join(props.textSeparate);
+}
+function getSelectArray() {
+  if (!props.columns.length || !pickerValue.value.length) {
+    text.value = '';
+    return;
+  }
+  const selectedOptions = findDataByValues(props.columns, pickerValue.value);
+  getTextDisplay(selectedOptions);
+}
+
+function getPickerInfo() {
+  if (Array.isArray(props.modelValue)) {
+    pickerValue.value = props.modelValue;
+    return;
+  }
+  if (props.valueSeparate) {
+    pickerValue.value = props.modelValue.split(props.valueSeparate);
+    return;
+  }
+  pickerValue.value = [props.modelValue];
+}
+
+watch(() => props.modelValue, () => {
+  getPickerInfo();
+  getSelectArray();
 }, {
   immediate: true,
   deep: true,
 });
 
-watch(() => props.columns, (newValue) => {
-  $updateUI(newValue);
+watch(() => props.columns, () => {
+  getPickerInfo();
+  getSelectArray();
 }, {
   immediate: true,
   deep: true,
 });
 
+const showPicker = ref(false);
 function onClick() {
   if (!props.readonly) {
     showPicker.value = true;
   } else {
-    showToast(props.readonlyTip || `${props.label}不可更改`);
+    showToast(`(props.readonlyTip || ${props.label})不可更改`);
   }
 }
-
-function onConfirm(item) {
+function updateModelValue(selectedValues) {
+  let updateValue = selectedValues[0];
+  if (Array.isArray(props.modelValue)) {
+    updateValue = selectedValues;
+  }
+  if (props.valueSeparate) {
+    updateValue = selectedValues.join(props.valueSeparate);
+  }
+  emit('update:modelValue', updateValue);
+}
+function onConfirm({ selectedValues, selectedOptions }) {
   showPicker.value = false;
-  // 注意：这里无需再调用 $updateUI()，因为下面的语句触发了 input 事件，而
-  // value 是作为 v-model 被绑定到本组件，因此 input 事件必然会自动
-  // 更新 value 的值，而 value 更新后会触发对其的 watch 函数，
-  // 该函数中会调用 $updateUI() 方法。
-  if (props.arrayDataMerge) {
-    const itemMerge = item.join(props.valueSeparator);
-    emit('update:modelValue', itemMerge);
-    emit('confirm', itemMerge);
-    return;
-  }
-  const val = props.valueKey ? item[props.valueKey] : item;
-  emit('update:modelValue', val);
-  emit('confirm', val);
+  updateModelValue(selectedValues);
+  emit('confirm', selectedOptions);
 }
 
-function onChange(picker, item) {
-  // 触发 change 事件
-  const val = props.valueKey ? item[props.valueKey] : item;
+function onChange(val) {
   emit('change', val);
 }
 </script>

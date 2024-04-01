@@ -39,7 +39,7 @@ import Credential from '@/models/Credential';
 
 const props = defineProps({
   modelValue: {
-    type: Credential,
+    type: Object,
     required: true,
   },
   required: Boolean,
@@ -102,7 +102,7 @@ const emit = defineEmits([
   'error',
 ]);
 
-const credential = ref(new Credential());
+const credential = useVModel(props, 'modelValue', emit);
 
 const credentialNumberRule = computed(() => [{
   required: props.required,
@@ -114,18 +114,6 @@ const credentialNumberRule = computed(() => [{
   },
 }].concat(props.rules));
 
-watch(() => props.value, (newValue) => {
-  credential.value.assign(newValue);
-}, {
-  immediate: true,
-  deep: true,
-});
-
-function credentialConfirm() {
-  emit('clear-error');
-  emit('update:modelValue', Credential.create(credential.value));   // 注意传递对象必须clone()
-}
-
 function onChangeType(type) {
   emit('change-type', type);
 }
@@ -135,12 +123,12 @@ function onConfirmType(type) {
   // this.credential.changeType(type);
   emit('confirm-type', type);
   emit('change', Credential.create(credential.value));
-  credentialConfirm();
+  emit('clear-error');
 }
 
 function onChangeNumber(number) {
   credential.value.number = number?.trim()?.toUpperCase();
-  credentialConfirm();
+  emit('clear-error');
 }
 
 function onNumberFieldClick() {

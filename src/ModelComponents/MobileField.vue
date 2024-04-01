@@ -33,7 +33,7 @@ const props = defineProps({
   readonly: Boolean,
   readonlyTip: {
     type: String,
-    default: '姓名',
+    default: '手机号码',
   },
   required: Boolean,
   rules: {
@@ -71,13 +71,6 @@ const mobileRule = computed(() => [{
     return result.success;
   },
 }].concat(props.rules));
-
-watch(() => props.value, (newValue) => {
-  mobile.value = newValue;
-}, {
-  immediate: true,
-  deep: true,
-});
 
 function onClick() {
   if (props.readonly) {
