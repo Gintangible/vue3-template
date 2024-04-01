@@ -10,7 +10,6 @@
     :max-date="maxDate"
     :input-align="inputAlign"
     :readonly="readonly"
-    @confirm="onConfirm"
   />
 </template>
 
@@ -19,8 +18,9 @@ import dayjs from 'dayjs';
 import DateSelect from '@/components/DateSelect.vue';
 
 const props = defineProps({
-  value: {
+  modelValue: {
     type: String,
+    default: '',
     required: true,
   },
   name: {
