@@ -7,10 +7,12 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    DateSelect: typeof import('./src/components/DateSelect.vue')['default']
     DatetimeSelect: typeof import('./src/components/DatetimeSelect.vue')['default']
     EnumSelect: typeof import('./src/components/EnumSelect.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    VanDatePicker: typeof import('vant/es')['DatePicker']
     VanField: typeof import('vant/es')['Field']
     VanForm: typeof import('vant/es')['Form']
     VanPicker: typeof import('vant/es')['Picker']

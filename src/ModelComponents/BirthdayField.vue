@@ -1,105 +1,66 @@
 <template>
-  <datetime-select
+  <DateSelect
     v-model="birthday"
-    type="date"
     :name="name"
     :required="required"
-    :value-format="valueFormat"
-    :display-format="displayFormat"
     :label="label"
     :placeholder="placeholder"
+    :default-picker-value="defaultPickerValue"
     :min-date="minDate"
     :max-date="maxDate"
     :input-align="inputAlign"
-    :default-selected="defaultSelected"
     :readonly="readonly"
     @confirm="onConfirm"
   />
 </template>
 
-<script>
+<script setup>
 import dayjs from 'dayjs';
-import DatetimeSelect from './DatetimeSelect.vue';
+import DateSelect from '@/components/DateSelect.vue';
 
-export default {
-  name: 'BirthdayField',
-  components: {
-    [DatetimeSelect.name]: DatetimeSelect,
+const props = defineProps({
+  value: {
+    type: String,
+    required: true,
   },
-  props: {
-    value: {                    // 绑定的出生日期的值
-      type: String,
-      required: true,
-    },
-    name: {
-      type: String,
-      default: 'birthday',
-    },
-    valueFormat: {              // 选中的出生日期数值的格式
-      type: String,
-      default: 'YYYY-MM-DD',
-    },
-    displayFormat: {            // 选中的出生日期在选择框中显示的格式
-      type: String,
-      default: 'YYYY年M月D日',
-    },
-    label: {                    // 出生日期选择框标签
-      type: String,
-      default: '出生日期',
-    },
-    placeholder: {              // 出生日期选择框提示文字
-      type: String,
-      default: '请选择出生日期',
-    },
-    minDate: {                  // 可选的最小出生日期
-      type: Date,
-      default: () => dayjs().subtract(120, 'year').toDate(),
-    },
-    maxDate: {                  // 可选的最大出生日期
-      type: Date,
-      default: () => dayjs().toDate(),
-    },
-    defaultSelected: {          // 默认选中的日期时间
-      type: String,
-      default: '1990-01-01',
-    },
-    inputAlign: {
-      type: String,
-      default: 'right',
-    },
-    readonly: Boolean,          // 选项框中选择的日期是否只读
-    required: Boolean,
+  name: {
+    type: String,
+    default: 'birthday',
   },
-  data() {
-    return {
-      birthday: '',            // 选中的出生日期的值
-    };
+  label: {
+    type: String,
+    default: '出生日期',
   },
-  watch: {
-    value: {
-      immediate: true,
-      deep: true,
-      handler(newValue) {
-        this.birthday = newValue;
-      },
-    },
+  placeholder: {
+    type: String,
+    default: '请选择出生日期',
   },
-  methods: {
-    /**
-     * 当出生日期选择框中的选项被选中时触发此事件。
-     *
-     * @param {Object} e
-     *     触发函数的事件，为选择的出生日期，以字符串形式表示，格式为'YYYY-MM-DD'。
-     */
-    onConfirm(e) {
-      this.$emit('confirm', e);
-      this.$emit('input', e);
-    },
+  minDate: {
+    type: Date,
+    default: () => dayjs().subtract(120, 'year').toDate(),
   },
-};
+  maxDate: {
+    type: Date,
+    default: () => dayjs().toDate(),
+  },
+  defaultPickerValue: {
+    type: String,
+    default: '1990-01-01',
+  },
+  inputAlign: {
+    type: String,
+    default: 'right',
+  },
+  readonly: Boolean,          // 选项框中选择的日期是否只读
+  required: Boolean,
+});
+
+const emit = defineEmits([
+  'update:modelValue',
+]);
+
+const birthday = useVModel(props, 'modelValue', emit);
+
 </script>
 <style scoped lang="less">
-:deep(.van-field__control) {
-  text-align: right;
-}
 </style>

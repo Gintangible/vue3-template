@@ -181,7 +181,7 @@ function onClick() {
   if (!props.readonly) {
     showPicker.value = true;
   } else {
-    showToast(`(props.readonlyTip || ${props.label})不可更改`);
+    showToast(`${props.readonlyTip || props.label}不可更改`);
   }
 }
 function updateModelValue(selectedValues) {

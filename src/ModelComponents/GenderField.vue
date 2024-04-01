@@ -1,94 +1,65 @@
 <template>
-  <enum-select
+  <EnumSelect
     v-model="gender"
     :name="name"
     :required="required"
     :columns="genders"
     :label="label"
     :placeholder="placeholder"
+    :input-align="inputAlign"
     :readonly="readonly"
     @confirm="onConfirm"
-    @change="onChange"
   />
 </template>
 
-<script>
+<script setup>
+import EnumSelect from '@/components/EnumSelect.vue';
 import GENDERS from '@/models/common/Gender';
-import EnumSelect from './EnumSelect';
 
-export default {
-  name: 'GenderField',
-  components: {
-    [EnumSelect.name]: EnumSelect,
+const props = defineProps({
+  modelValue: {
+    type: String,
+    required: true,
+    default: '',
   },
-  model: {
-    prop: 'model',
+  name: {
+    type: String,
+    default: 'gender',
   },
-  props: {
-    model: {                                // 绑定的性别枚举值
-      type: null,
-      required: true,
-    },
-    name: {
-      type: String,
-      default: 'gender',
-    },
-    label: {                                // 选项框标签
-      type: String,
-      default: '性　　别',
-    },
-    placeholder: {                          // 选项框提示文字
-      type: String,
-      default: '请选择性别',
-    },
-    genders: {                             // 性别下拉框的选项列表
-      type: Array,
-      default: () => GENDERS,
-    },
-    readonly: Boolean,
-    required: Boolean,
+  genders: {                             // 性别下拉框的选项列表
+    type: Array,
+    default: () => GENDERS,
   },
-  data() {
-    return {
-      gender: '',                   // 选中的性别枚举值
-    };
+  readonly: Boolean,
+  readonlyTip: {
+    type: String,
+    default: '性别',
   },
-  watch: {
-    model: {
-      immediate: true,
-      deep: true,
-      handler(newValue) {
-        this.gender = newValue;
-      },
-    },
+  required: Boolean,
+  label: {
+    type: String,
+    default: '性　　别',
   },
-  methods: {
-    /**
-     * 当性别选择框中的选项被确认修改时触发此事件。
-     *
-     * @param {String} value
-     *     触发函数的事件，为{@link Gender}枚举中某个元素的值。
-     */
-    onConfirm(value) {
-      this.$emit('input', value);
-      this.$emit('confirm', value);
-    },
+  placeholder: {
+    type: String,
+    default: '请选择性别',
+  },
+  inputAlign: {
+    type: String,
+    default: 'right',
+  },
+});
 
-    /**
-     * 当用户改变弹出的性别选择框中的选项值时触发此事件。
-     *
-     * @param {String} value
-     *     触发函数的事件，为{@link Gender}枚举中某个元素的值。
-     */
-    onChange(value) {
-      this.$emit('change', value);
-    },
-  },
-};
+const emit = defineEmits([
+  'confirm',
+  'update:modelValue',
+]);
+
+const gender = useVModel(props, 'modelValue', emit);
+
+function onConfirm(value) {
+  emit('confirm', value);
+}
 </script>
 <style scoped lang="less">
-.gender-field {
-  display: block;
-  padding: 0;
-}
 </style>

@@ -1,10 +1,10 @@
 const GENDER_MAP = {
   MALE: {
-    name: '男',
+    text: '男',
     value: 'MALE',
   },
   FEMALE: {
-    name: '女',
+    text: '女',
     value: 'FEMALE',
   },
 };
@@ -12,7 +12,7 @@ const GENDER_MAP = {
 const GENDERS = Object.values(GENDER_MAP);
 
 export function genderFilter(gender) {
-  return GENDER_MAP[gender]?.name;
+  return GENDER_MAP[gender]?.text;
 }
 
 export {

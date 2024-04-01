@@ -30,7 +30,7 @@ const CREDENTIAL_TYPES = Object.values(CREDENTIAL_TYPE_MAP);
 const DEFAULT_CREDENTIAL_TYPE = CREDENTIAL_TYPE_MAP.IDENTITY_CARD;
 
 export function credentialTypeFilter(type) {
-  return CREDENTIAL_TYPE_MAP[type]?.name;
+  return CREDENTIAL_TYPE_MAP[type]?.text;
 }
 
 export {
