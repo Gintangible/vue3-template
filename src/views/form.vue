@@ -14,6 +14,7 @@
         @error-clear="getErrorClear"
       />
       <MobileField v-model="insured.mobile" required />
+      <CredentialField v-model="insured.credential" required />
     </div>
     <EnumSelect
       v-model="enumValue"
@@ -35,14 +36,12 @@
       提交
     </div>
   </van-form>
-
-  <!-- <CredentialField v-model="insured.credential" required /> -->
 </template>
 
 <script setup>
 import EnumSelect from '@/components/EnumSelect.vue';
 import NameField from '@/modelComponents/NameField.vue';
-// import CredentialField from '@/modelComponents/CredentialField.vue';
+import CredentialField from '@/modelComponents/CredentialField.vue';
 import MobileField from '@/modelComponents/MobileField.vue';
 import Person from '@/models/Person';
 

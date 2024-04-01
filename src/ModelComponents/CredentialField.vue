@@ -43,14 +43,6 @@ const props = defineProps({
     required: true,
   },
   required: Boolean,
-  typeRules: {
-    type: Array,
-    default: () => [],
-  },
-  numberRules: {
-    type: Array,
-    default: () => [],
-  },
   name: {
     type: String,
     default: '',
@@ -67,6 +59,11 @@ const props = defineProps({
     type: String,
     default: '请选择证件类型',
   },
+  typeReadonly: Boolean,
+  typeRules: {
+    type: Array,
+    default: () => [],
+  },
   credentialTypes: {                // 证件类型选项
     type: Array,
     default: () => CREDENTIAL_TYPES,
@@ -79,13 +76,16 @@ const props = defineProps({
     type: String,
     default: '请填写证件号码',
   },
+  numberRules: {
+    type: Array,
+    default: () => [],
+  },
+  numberReadonly: Boolean,
   readonly: Boolean,
   readonlyTip: {
     type: String,
     default: '',
   },
-  typeReadonly: Boolean,
-  numberReadonly: Boolean,
   inputAlign: {
     type: String,
     default: 'right',
@@ -112,7 +112,7 @@ const credentialNumberRule = computed(() => [{
     rule.message = result.description;
     return result.success;
   },
-}].concat(props.rules));
+}].concat(props.numberRules));
 
 function onChangeType(type) {
   emit('change-type', type);
