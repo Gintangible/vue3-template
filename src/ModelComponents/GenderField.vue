@@ -13,7 +13,6 @@
 </template>
 
 <script setup>
-import EnumSelect from '@/components/EnumSelect.vue';
 import GENDERS from '@/models/common/Gender';
 
 const props = defineProps({

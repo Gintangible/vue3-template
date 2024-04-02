@@ -33,7 +33,6 @@
 
 <script setup>
 import { showToast } from 'vant';
-import EnumSelect from '@/components/EnumSelect.vue';
 import { CREDENTIAL_TYPES } from '@/models/common/CredentialType';
 import Credential from '@/models/Credential';
 

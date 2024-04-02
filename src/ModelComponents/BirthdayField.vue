@@ -15,7 +15,6 @@
 
 <script setup>
 import dayjs from 'dayjs';
-import DateSelect from '@/components/DateSelect.vue';
 
 const props = defineProps({
   modelValue: {

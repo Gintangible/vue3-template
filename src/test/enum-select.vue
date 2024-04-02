@@ -19,8 +19,6 @@
 </template>
 
 <script setup>
-import EnumSelect from '@/components/EnumSelect.vue';
-
 const enumValue = ref('HONGKONG_MACAO_TAIWAN_RESIDENCE_PERMIT');
 const enumColumns = [{
   name: '港澳通行证',

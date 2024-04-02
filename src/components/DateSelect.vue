@@ -6,7 +6,6 @@
       :label="label"
       :placeholder="placeholder"
       readonly
-      clickable
       :is-link="isLink"
       :input-align="inputAlign"
       :required="required"
@@ -47,7 +46,7 @@ const props = defineProps({
   },
   name: {
     type: String,
-    default: 'DateSelect',
+    default: 'dateSelect',
   },
   label: {
     type: String,

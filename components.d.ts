@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    DateRangeSelect: typeof import('./src/components/DateRangeSelect.vue')['default']
     DateSelect: typeof import('./src/components/DateSelect.vue')['default']
     DatetimeSelect: typeof import('./src/components/DatetimeSelect.vue')['default']
     EnumSelect: typeof import('./src/components/EnumSelect.vue')['default']
